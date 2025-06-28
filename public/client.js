@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusDiv = document.getElementById('status');
   const nameDiv = document.createElement('div');
   const passWordBtn = document.getElementById('pass-word-btn');
-  const categorySelect = document.getElementById('category-select');
-  let selectedCategory = 'default';
 
   nameDiv.id = 'player-name';
   nameDiv.style.fontWeight = 'bold';
@@ -28,11 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
       passWordBtn.disabled = false;
       passWordBtn.textContent = 'Pass on Word';
     }, 1000);
-  });
-
-  categorySelect.addEventListener('change', () => {
-    selectedCategory = categorySelect.value;
-    socket.emit('setCategory', selectedCategory);
   });
 
   socket.on('message', (data) => {
@@ -66,10 +59,5 @@ document.addEventListener('DOMContentLoaded', () => {
       turnBtn.style.display = 'none';
       passWordBtn.style.display = 'none';
     }
-  });
-
-  socket.on('setCategory', (category) => {
-    selectedCategory = category;
-    categorySelect.value = category;
   });
 });

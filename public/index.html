@@ -2,7 +2,6 @@
 <html>
   <head>
     <title>MingoMatch</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       body {
         font-family: 'Segoe UI', Arial, sans-serif;
@@ -13,68 +12,42 @@
         flex-direction: column;
         align-items: center;
         min-height: 100vh;
-        box-sizing: border-box;
       }
       h1 {
         color: #4a90e2;
-        margin-top: 24px;
-        font-size: 2em;
-        text-align: center;
+        margin-top: 40px;
       }
       #game-container {
         background: #fff;
         border-radius: 16px;
         box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-        padding: 20px 8px 16px 8px;
-        margin-top: 16px;
-        width: 95vw;
-        max-width: 420px;
-        min-width: 0;
+        padding: 32px 24px 24px 24px;
+        margin-top: 32px;
+        min-width: 320px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        box-sizing: border-box;
       }
       #status {
-        font-size: 1.1em;
-        margin-bottom: 18px;
+        font-size: 1.2em;
+        margin-bottom: 24px;
         color: #333;
         min-height: 2em;
         text-align: center;
-        word-break: break-word;
-      }
-      #category-select, label[for="category-select"] {
-        width: 100%;
-        max-width: 340px;
-        box-sizing: border-box;
-        font-size: 1em;
-      }
-      #category-select {
-        margin-bottom: 18px;
-        padding: 10px 12px;
-        border-radius: 8px;
-        border: 1px solid #d0d0d0;
-        background: #f7f7fa;
-      }
-      #turn-btn, #pass-word-btn {
-        width: 100%;
-        max-width: 340px;
-        min-width: 0;
-        box-sizing: border-box;
-        margin-bottom: 12px;
-        padding: 14px 0;
-        font-size: 1.1em;
-        font-weight: bold;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-        display: none;
       }
       #turn-btn {
         background: linear-gradient(90deg, #4a90e2, #50e3c2);
         color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 16px 32px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
         box-shadow: 0 2px 8px rgba(80,227,194,0.08);
+        transition: background 0.2s, transform 0.1s;
+        margin-bottom: 16px;
+        display: none;
       }
       #turn-btn:active {
         transform: scale(0.97);
@@ -84,9 +57,18 @@
         cursor: not-allowed;
       }
       #pass-word-btn {
+        display: none;
         background: linear-gradient(90deg, #e24a4a, #e3c250);
         color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 16px 32px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
         box-shadow: 0 2px 8px rgba(227,194,80,0.08);
+        transition: background 0.2s, transform 0.1s;
+        margin-bottom: 16px;
       }
       #pass-word-btn:active {
         transform: scale(0.97);
@@ -95,36 +77,12 @@
         background: #b2b2b2;
         cursor: not-allowed;
       }
-      @media (max-width: 500px) {
-        h1 {
-          font-size: 1.3em;
-          margin-top: 12px;
-        }
-        #game-container {
-          padding: 10px 2vw 10px 2vw;
-          max-width: 99vw;
-        }
-        #category-select, #turn-btn, #pass-word-btn {
-          font-size: 1em;
-          max-width: 98vw;
-        }
-      }
     </style>
   </head>
   <body>
     <h1>MingoMatch</h1>
     <div id="game-container">
       <div id="status">Connecting...</div>
-      <label for="category-select" style="margin-bottom:12px;font-weight:bold;">Word Category:</label>
-      <select id="category-select" style="margin-bottom:20px;padding:8px 16px;border-radius:6px;font-size:1em;">
-        <option value="default">All</option>
-        <option value="food">Food & Drink</option>
-        <option value="places">Places</option>
-        <option value="activities">Activities</option>
-        <option value="colors">Colors</option>
-        <option value="people">People/Names</option>
-        <option value="funny">Funny</option>
-      </select>
       <button id="turn-btn">Pass Turn</button>
       <button id="pass-word-btn" style="display:none;background:linear-gradient(90deg,#e24a4a,#e3c250);color:#fff;border:none;border-radius:8px;padding:16px 32px;font-size:1.1em;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(227,194,80,0.08);transition:background 0.2s,transform 0.1s;margin-bottom:16px;">Pass on Word</button>
     </div>
