@@ -11,11 +11,35 @@ document.addEventListener('DOMContentLoaded', () => {
   let timeLeft = 0;
   let beepAudio = null;
   let startAudio = null;
+  let isMuted = false;
 
   nameDiv.id = 'player-name';
   nameDiv.style.fontWeight = 'bold';
   nameDiv.style.marginBottom = '12px';
   document.getElementById('game-container').insertBefore(nameDiv, document.getElementById('status'));
+
+  // Add mute button to UI
+  const muteBtn = document.createElement('button');
+  muteBtn.id = 'mute-btn';
+  muteBtn.textContent = '🔊';
+  muteBtn.title = 'Mute/Unmute Sounds';
+  muteBtn.style.position = 'absolute';
+  muteBtn.style.top = '10px';
+  muteBtn.style.right = '10px';
+  muteBtn.style.zIndex = '100';
+  muteBtn.style.background = '#fff';
+  muteBtn.style.border = '1px solid #ccc';
+  muteBtn.style.borderRadius = '50%';
+  muteBtn.style.width = '36px';
+  muteBtn.style.height = '36px';
+  muteBtn.style.fontSize = '18px';
+  muteBtn.style.cursor = 'pointer';
+  document.body.appendChild(muteBtn);
+
+  muteBtn.addEventListener('click', () => {
+    isMuted = !isMuted;
+    muteBtn.textContent = isMuted ? '🔇' : '🔊';
+  });
 
   turnBtn.addEventListener('click', () => {
     socket.emit('passTurn');
@@ -49,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function playStartSound() {
+    if (isMuted) return;
     if (startAudio) {
       startAudio.pause();
       startAudio.currentTime = 0;
@@ -58,11 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function playBeep() {
+    if (isMuted) return;
     if (beepAudio) {
       beepAudio.pause();
       beepAudio.currentTime = 0;
     }
-    beepAudio = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b7bfa.mp3');
+    beepAudio = new Audio('Sound.wav');
     beepAudio.play();
   }
 
@@ -81,11 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(countdownInterval);
     timeLeft = seconds;
     updateTimerDisplay();
-    if (timeLeft > 0) playBeep();
+
     countdownInterval = setInterval(() => {
       timeLeft--;
       updateTimerDisplay();
-      if (timeLeft > 0) playBeep();
+
       if (timeLeft <= 0) {
         clearInterval(countdownInterval);
       }
@@ -104,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on('gameStarted', () => {
     gameActive = true;
+    if (!isMuted) playStartSound();
     startStopBtn.textContent = 'Stop Game';
     startStopBtn.style.background = 'linear-gradient(90deg,#e24a4a,#e3c250)';
   });
@@ -123,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nameDiv.textContent = `Hi ${data.name}!`;
     }
     if (data.type === 'newWord') {
-      if (gameActive) playStartSound();
+      if (gameActive && !isMuted) playStartSound();
       statusDiv.textContent = `Your word: ${data.word}`;
       turnBtn.disabled = false;
       turnBtn.style.display = 'inline-block';
