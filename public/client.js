@@ -19,22 +19,22 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('game-container').insertBefore(nameDiv, document.getElementById('status'));
 
   // Add mute button to UI
-  const muteBtn = document.createElement('button');
-  muteBtn.id = 'mute-btn';
-  muteBtn.textContent = '🔊';
-  muteBtn.title = 'Mute/Unmute Sounds';
-  muteBtn.style.position = 'absolute';
-  muteBtn.style.top = '10px';
-  muteBtn.style.right = '10px';
-  muteBtn.style.zIndex = '100';
-  muteBtn.style.background = '#fff';
-  muteBtn.style.border = '1px solid #ccc';
-  muteBtn.style.borderRadius = '50%';
-  muteBtn.style.width = '36px';
-  muteBtn.style.height = '36px';
-  muteBtn.style.fontSize = '18px';
-  muteBtn.style.cursor = 'pointer';
-  document.body.appendChild(muteBtn);
+//   const muteBtn = document.createElement('button');
+//   muteBtn.id = 'mute-btn';
+//   muteBtn.textContent = '🔊';
+//   muteBtn.title = 'Mute/Unmute Sounds';
+//   muteBtn.style.position = 'absolute';
+//   muteBtn.style.top = '10px';
+//   muteBtn.style.right = '10px';
+//   muteBtn.style.zIndex = '100';
+//   muteBtn.style.background = '#fff';
+//   muteBtn.style.border = '1px solid #ccc';
+//   muteBtn.style.borderRadius = '50%';
+//   muteBtn.style.width = '36px';
+//   muteBtn.style.height = '36px';
+//   muteBtn.style.fontSize = '18px';
+//   muteBtn.style.cursor = 'pointer';
+//   document.body.appendChild(muteBtn);
 
   muteBtn.addEventListener('click', () => {
     isMuted = !isMuted;
