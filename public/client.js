@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const turnBtn = document.getElementById('turn-btn');
   const statusDiv = document.getElementById('status');
   const nameDiv = document.createElement('div');
+  const passWordBtn = document.getElementById('pass-word-btn');
 
   nameDiv.id = 'player-name';
   nameDiv.style.fontWeight = 'bold';
@@ -16,6 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
     statusDiv.textContent = 'Waiting for other player...';
   });
 
+  passWordBtn.addEventListener('click', () => {
+    socket.emit('passWord');
+    // Optionally, give feedback
+    passWordBtn.disabled = true;
+    passWordBtn.textContent = 'Word Passed!';
+    setTimeout(() => {
+      passWordBtn.disabled = false;
+      passWordBtn.textContent = 'Pass on Word';
+    }, 1000);
+  });
+
   socket.on('message', (data) => {
     if (data.name) {
       nameDiv.textContent = `You are: ${data.name}`;
@@ -24,10 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
       statusDiv.textContent = `Your word: ${data.word}`;
       turnBtn.disabled = false;
       turnBtn.style.display = 'inline-block';
+      passWordBtn.style.display = 'inline-block';
+      passWordBtn.disabled = false;
+      passWordBtn.textContent = 'Pass on Word';
     } else if (data.type === 'yourTurn') {
-      statusDiv.textContent = 'Wait for your turn...';
+      statusDiv.textContent = `It is ${data.currentPlayer}'s turn.`;
       turnBtn.disabled = true;
       turnBtn.style.display = 'none';
+      passWordBtn.style.display = 'none';
     } else if (data.type === 'timeout') {
       if (socket.id === data.loser) {
         statusDiv.textContent = "Time's up! You lost this round.";
@@ -36,10 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       turnBtn.disabled = true;
       turnBtn.style.display = 'none';
+      passWordBtn.style.display = 'none';
     } else if (data.type === 'info') {
       statusDiv.textContent = data.text;
       turnBtn.disabled = true;
       turnBtn.style.display = 'none';
+      passWordBtn.style.display = 'none';
     }
   });
 });

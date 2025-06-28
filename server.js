@@ -14,7 +14,7 @@ const words = [
   'CC Club', 'Vegas Lounge', 'Parlor', 'Flora Room', 'Hewing Hotel', 'Wild Minds',
   'Meteor Bar', 'Tattersall', 'Star Gazer', "Nico's Tacos", 'Malcolm Yards',
   'Snack Bar', 'Minari', "Diane's Place", 'Paraguay', 'China', 'Pink', 'Blue',
-  'Candy', 'Coco', 'Javier', 'Salsa Dancing'
+  'Candy', 'Coco', 'Javier', 'clogging the toilet', 'spicy poos', 'Salsa Dancing'
 ];
 let players = [];
 const playerNames = ['nate', 'courtney'];
@@ -38,7 +38,8 @@ function startGame() {
     type: 'yourTurn',
     yourTurn: false,
     time: TURN_TIME,
-    name: playerNames[(currentPlayerIndex + 1) % 2]
+    name: playerNames[(currentPlayerIndex + 1) % 2],
+    currentPlayer: playerNames[currentPlayerIndex]
   });
 
   // Start timer
@@ -70,6 +71,18 @@ io.on('connection', (socket) => {
     if (timer) clearTimeout(timer);
     currentPlayerIndex = (currentPlayerIndex + 1) % 2;
     startGame();
+  });
+
+  socket.on('passWord', () => {
+    // Just send a new word to the current player, do not change turn or timer
+    currentWord = words[Math.floor(Math.random() * words.length)];
+    players[currentPlayerIndex].emit('message', {
+      type: 'newWord',
+      word: currentWord,
+      yourTurn: true,
+      time: TURN_TIME,
+      name: playerNames[currentPlayerIndex]
+    });
   });
 
   socket.on('disconnect', () => {

@@ -56,6 +56,27 @@
         background: #b2b2b2;
         cursor: not-allowed;
       }
+      #pass-word-btn {
+        display: none;
+        background: linear-gradient(90deg, #e24a4a, #e3c250);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 16px 32px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(227,194,80,0.08);
+        transition: background 0.2s, transform 0.1s;
+        margin-bottom: 16px;
+      }
+      #pass-word-btn:active {
+        transform: scale(0.97);
+      }
+      #pass-word-btn:disabled {
+        background: #b2b2b2;
+        cursor: not-allowed;
+      }
     </style>
   </head>
   <body>
@@ -63,6 +84,7 @@
     <div id="game-container">
       <div id="status">Connecting...</div>
       <button id="turn-btn">Pass Turn</button>
+      <button id="pass-word-btn" style="display:none;background:linear-gradient(90deg,#e24a4a,#e3c250);color:#fff;border:none;border-radius:8px;padding:16px 32px;font-size:1.1em;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(227,194,80,0.08);transition:background 0.2s,transform 0.1s;margin-bottom:16px;">Pass on Word</button>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/client.js"></script>
