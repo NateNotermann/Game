@@ -22,36 +22,9 @@ let currentWord = '';
 let currentPlayerIndex = 0;
 let timer = null;
 const TURN_TIME = 30; // seconds
+let gameActive = false;
 
 app.use(express.static('public'));
-
-function startGame() {
-  currentWord = words[Math.floor(Math.random() * words.length)];
-  players[currentPlayerIndex].emit('message', {
-    type: 'newWord',
-    word: currentWord,
-    yourTurn: true,
-    time: TURN_TIME,
-    name: playerNames[currentPlayerIndex]
-  });
-  players[(currentPlayerIndex + 1) % 2].emit('message', {
-    type: 'yourTurn',
-    yourTurn: false,
-    time: TURN_TIME,
-    name: playerNames[(currentPlayerIndex + 1) % 2],
-    currentPlayer: playerNames[currentPlayerIndex]
-  });
-
-  // Start timer
-  if (timer) clearTimeout(timer);
-  timer = setTimeout(() => {
-    // Time's up, current player loses
-    io.emit('message', { type: 'timeout', loser: players[currentPlayerIndex].id });
-    // Switch turn
-    currentPlayerIndex = (currentPlayerIndex + 1) % 2;
-    startGame();
-  }, TURN_TIME * 1000);
-}
 
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -61,11 +34,27 @@ io.on('connection', (socket) => {
     socket.emit('message', { type: 'info', text: 'Waiting for another player...', name: playerNames[players.length - 1] });
     
     if (players.length === 2) {
-      startGame();
+      socket.emit('message', { type: 'info', text: 'Both players connected. Click "Start Game" to begin.' });
     }
   } else {
     socket.emit('message', { type: 'info', text: 'Game is full. Please wait.' });
   }
+
+  socket.on('startGame', () => {
+    if (!gameActive && players.length === 2) {
+      gameActive = true;
+      startGame();
+      io.emit('gameStarted');
+    }
+  });
+
+  socket.on('stopGame', () => {
+    if (gameActive) {
+      gameActive = false;
+      if (timer) clearTimeout(timer);
+      io.emit('gamePaused');
+    }
+  });
 
   socket.on('passTurn', () => {
     if (timer) clearTimeout(timer);
@@ -95,6 +84,37 @@ io.on('connection', (socket) => {
     }
   });
 });
+
+function startGame() {
+  if (!gameActive) return;
+  currentWord = words[Math.floor(Math.random() * words.length)];
+  players[currentPlayerIndex].emit('message', {
+    type: 'newWord',
+    word: currentWord,
+    yourTurn: true,
+    time: TURN_TIME,
+    name: playerNames[currentPlayerIndex]
+  });
+  players[(currentPlayerIndex + 1) % 2].emit('message', {
+    type: 'yourTurn',
+    yourTurn: false,
+    time: TURN_TIME,
+    name: playerNames[(currentPlayerIndex + 1) % 2],
+    currentPlayer: playerNames[currentPlayerIndex]
+  });
+
+  // Start timer
+  if (timer) clearTimeout(timer);
+  timer = setTimeout(() => {
+    // Time's up, current player loses
+    gameActive = false;
+    io.emit('gameOver', {
+      loser: playerNames[currentPlayerIndex],
+      winner: playerNames[(currentPlayerIndex + 1) % 2]
+    });
+    // Do not auto-restart
+  }, TURN_TIME * 1000);
+}
 
 server.listen(3000, () => {
   console.log('listening on http://localhost:3000');

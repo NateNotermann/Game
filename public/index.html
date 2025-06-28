@@ -77,12 +77,33 @@
         background: #b2b2b2;
         cursor: not-allowed;
       }
+      #start-stop-btn {
+        width: 100%;
+        max-width: 340px;
+        min-width: 0;
+        box-sizing: border-box;
+        margin-bottom: 12px;
+        padding: 14px 0;
+        font-size: 1.1em;
+        font-weight: bold;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+        background: linear-gradient(90deg, #4ae250, #50e3c2);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(80,227,194,0.08);
+      }
+      #start-stop-btn:active {
+        transform: scale(0.97);
+      }
     </style>
   </head>
   <body>
     <h1>MingoMatch</h1>
     <div id="game-container">
       <div id="status">Connecting...</div>
+      <button id="start-stop-btn" style="width:100%;max-width:340px;min-width:0;box-sizing:border-box;margin-bottom:12px;padding:14px 0;font-size:1.1em;font-weight:bold;border-radius:8px;border:none;cursor:pointer;transition:background 0.2s,transform 0.1s;background:linear-gradient(90deg,#4ae250,#50e3c2);color:#fff;box-shadow:0 2px 8px rgba(80,227,194,0.08);">Start Game</button>
       <button id="turn-btn">Pass Turn</button>
       <button id="pass-word-btn" style="display:none;background:linear-gradient(90deg,#e24a4a,#e3c250);color:#fff;border:none;border-radius:8px;padding:16px 32px;font-size:1.1em;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(227,194,80,0.08);transition:background 0.2s,transform 0.1s;margin-bottom:16px;">Pass on Word</button>
     </div>

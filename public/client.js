@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusDiv = document.getElementById('status');
   const nameDiv = document.createElement('div');
   const passWordBtn = document.getElementById('pass-word-btn');
+  const startStopBtn = document.getElementById('start-stop-btn');
+  let gameActive = false;
+  let countdownInterval = null;
+  let timeLeft = 0;
+  let beepAudio = null;
+  let startAudio = null;
 
   nameDiv.id = 'player-name';
   nameDiv.style.fontWeight = 'bold';
@@ -28,11 +34,96 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
   });
 
+  startStopBtn.addEventListener('click', () => {
+    if (!gameActive) {
+      socket.emit('startGame');
+      startStopBtn.textContent = 'Stop Game';
+      startStopBtn.style.background = 'linear-gradient(90deg,#e24a4a,#e3c250)';
+      gameActive = true;
+    } else {
+      socket.emit('stopGame');
+      startStopBtn.textContent = 'Start Game';
+      startStopBtn.style.background = 'linear-gradient(90deg,#4ae250,#50e3c2)';
+      gameActive = false;
+    }
+  });
+
+  function playStartSound() {
+    if (startAudio) {
+      startAudio.pause();
+      startAudio.currentTime = 0;
+    }
+    startAudio = new Audio('Sound.wav');
+    startAudio.play();
+  }
+
+  function playBeep() {
+    if (beepAudio) {
+      beepAudio.pause();
+      beepAudio.currentTime = 0;
+    }
+    beepAudio = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b7bfa.mp3');
+    beepAudio.play();
+  }
+
+  function stopAllSounds() {
+    if (beepAudio) {
+      beepAudio.pause();
+      beepAudio.currentTime = 0;
+    }
+    if (startAudio) {
+      startAudio.pause();
+      startAudio.currentTime = 0;
+    }
+  }
+
+  function startCountdown(seconds) {
+    clearInterval(countdownInterval);
+    timeLeft = seconds;
+    updateTimerDisplay();
+    if (timeLeft > 0) playBeep();
+    countdownInterval = setInterval(() => {
+      timeLeft--;
+      updateTimerDisplay();
+      if (timeLeft > 0) playBeep();
+      if (timeLeft <= 0) {
+        clearInterval(countdownInterval);
+      }
+    }, 1000);
+  }
+
+  socket.on('gamePaused', () => {
+    gameActive = false;
+    stopAllSounds();
+    startStopBtn.textContent = 'Start Game';
+    startStopBtn.style.background = 'linear-gradient(90deg,#4ae250,#50e3c2)';
+    statusDiv.textContent = 'Game paused. Press Start Game to play!';
+    turnBtn.style.display = 'none';
+    passWordBtn.style.display = 'none';
+  });
+
+  socket.on('gameStarted', () => {
+    gameActive = true;
+    startStopBtn.textContent = 'Stop Game';
+    startStopBtn.style.background = 'linear-gradient(90deg,#e24a4a,#e3c250)';
+  });
+
+  socket.on('gameOver', (data) => {
+    gameActive = false;
+    stopAllSounds();
+    startStopBtn.textContent = 'Start Game';
+    startStopBtn.style.background = 'linear-gradient(90deg,#4ae250,#50e3c2)';
+    statusDiv.textContent = `${data.loser} lost! ${data.winner} wins!`;
+    turnBtn.style.display = 'none';
+    passWordBtn.style.display = 'none';
+  });
+
   socket.on('message', (data) => {
     if (data.name) {
       nameDiv.textContent = `Hi ${data.name}!`;
     }
     if (data.type === 'newWord') {
+      if (gameActive) playStartSound();
       statusDiv.textContent = `Your word: ${data.word}`;
       turnBtn.disabled = false;
       turnBtn.style.display = 'inline-block';
@@ -45,14 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
       turnBtn.style.display = 'none';
       passWordBtn.style.display = 'none';
     } else if (data.type === 'timeout') {
-      if (socket.id === data.loser) {
-        statusDiv.textContent = "Time's up! You lost this round.";
-      } else {
-        statusDiv.textContent = "Opponent ran out of time! Your turn.";
-      }
-      turnBtn.disabled = true;
-      turnBtn.style.display = 'none';
-      passWordBtn.style.display = 'none';
+      // handled by gameOver
     } else if (data.type === 'info') {
       statusDiv.textContent = data.text;
       turnBtn.disabled = true;
