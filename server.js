@@ -68,8 +68,15 @@ io.on('connection', (socket) => {
   socket.on('setCategory', (category) => {
     if (wordCategories[category]) {
       currentCategory = category;
+      // Tell both clients to update their dropdown
+      players.forEach((player) => {
+        player.emit('setCategory', category);
+      });
     } else {
       currentCategory = 'default';
+      players.forEach((player) => {
+        player.emit('setCategory', 'default');
+      });
     }
   });
 

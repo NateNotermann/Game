@@ -67,4 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
       passWordBtn.style.display = 'none';
     }
   });
+
+  socket.on('setCategory', (category) => {
+    selectedCategory = category;
+    categorySelect.value = category;
+  });
 });
