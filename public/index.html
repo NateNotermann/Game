@@ -2,33 +2,69 @@
 <html>
   <head>
     <title>Socket.IO Game Test</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: #f7f7fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+      }
+      h1 {
+        color: #4a90e2;
+        margin-top: 40px;
+      }
+      #game-container {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        padding: 32px 24px 24px 24px;
+        margin-top: 32px;
+        min-width: 320px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #status {
+        font-size: 1.2em;
+        margin-bottom: 24px;
+        color: #333;
+        min-height: 2em;
+        text-align: center;
+      }
+      #turn-btn {
+        background: linear-gradient(90deg, #4a90e2, #50e3c2);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 16px 32px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(80,227,194,0.08);
+        transition: background 0.2s, transform 0.1s;
+        margin-bottom: 16px;
+        display: none;
+      }
+      #turn-btn:active {
+        transform: scale(0.97);
+      }
+      #turn-btn:disabled {
+        background: #b2b2b2;
+        cursor: not-allowed;
+      }
+    </style>
   </head>
   <body>
-    <h1>Socket.IO Chat</h1>
-    <input id="input" placeholder="Type something..." />
-    <ul id="messages"></ul>
-
+    <h1>2-Player Word Game</h1>
+    <div id="game-container">
+      <div id="status">Connecting...</div>
+      <button id="turn-btn">Pass Turn</button>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const socket = io();
-      const input = document.getElementById('input');
-      const messages = document.getElementById('messages');
-
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && input.value) {
-          socket.emit('message', input.value);
-          const li = document.createElement('li');
-          li.textContent = 'You: ' + input.value;
-          messages.appendChild(li);
-          input.value = '';
-        }
-      });
-
-      socket.on('message', (msg) => {
-        const li = document.createElement('li');
-        li.textContent = 'Them: ' + msg;
-        messages.appendChild(li);
-      });
-    </script>
+    <script src="/client.js"></script>
   </body>
 </html>
