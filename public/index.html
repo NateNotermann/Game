@@ -83,6 +83,16 @@
     <h1>2-Player Word Game</h1>
     <div id="game-container">
       <div id="status">Connecting...</div>
+      <label for="category-select" style="margin-bottom:12px;font-weight:bold;">Word Category:</label>
+      <select id="category-select" style="margin-bottom:20px;padding:8px 16px;border-radius:6px;font-size:1em;">
+        <option value="default">All</option>
+        <option value="food">Food & Drink</option>
+        <option value="places">Places</option>
+        <option value="activities">Activities</option>
+        <option value="colors">Colors</option>
+        <option value="people">People/Names</option>
+        <option value="funny">Funny</option>
+      </select>
       <button id="turn-btn">Pass Turn</button>
       <button id="pass-word-btn" style="display:none;background:linear-gradient(90deg,#e24a4a,#e3c250);color:#fff;border:none;border-radius:8px;padding:16px 32px;font-size:1.1em;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(227,194,80,0.08);transition:background 0.2s,transform 0.1s;margin-bottom:16px;">Pass on Word</button>
     </div>

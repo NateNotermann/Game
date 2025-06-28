@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusDiv = document.getElementById('status');
   const nameDiv = document.createElement('div');
   const passWordBtn = document.getElementById('pass-word-btn');
+  const categorySelect = document.getElementById('category-select');
+  let selectedCategory = 'default';
 
   nameDiv.id = 'player-name';
   nameDiv.style.fontWeight = 'bold';
@@ -28,9 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
   });
 
+  categorySelect.addEventListener('change', () => {
+    selectedCategory = categorySelect.value;
+    socket.emit('setCategory', selectedCategory);
+  });
+
   socket.on('message', (data) => {
     if (data.name) {
-      nameDiv.textContent = `You are: ${data.name}`;
+      nameDiv.textContent = `Hi ${data.name}!`;
     }
     if (data.type === 'newWord') {
       statusDiv.textContent = `Your word: ${data.word}`;
