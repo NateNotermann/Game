@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const messages = document.getElementById('messages');
   const turnBtn = document.getElementById('turn-btn');
   const statusDiv = document.getElementById('status');
+  const nameDiv = document.createElement('div');
+
+  nameDiv.id = 'player-name';
+  nameDiv.style.fontWeight = 'bold';
+  nameDiv.style.marginBottom = '12px';
+  document.getElementById('game-container').insertBefore(nameDiv, document.getElementById('status'));
 
   turnBtn.addEventListener('click', () => {
     socket.emit('passTurn');
@@ -11,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('message', (data) => {
+    if (data.name) {
+      nameDiv.textContent = `You are: ${data.name}`;
+    }
     if (data.type === 'newWord') {
       statusDiv.textContent = `Your word: ${data.word}`;
       turnBtn.disabled = false;

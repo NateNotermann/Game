@@ -6,8 +6,18 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const words = ['apple', 'banana', 'cherry', 'date', 'elderberry'];
+const words = [
+  'Miami', 'New York', 'Flingy', 'Dingy', 'Flamingo', 'Monkey', 'Public Domain',
+  'Nicolet Island Inn', 'Cabana Club', 'Mezcal', 'Tequila', 'Whiskey',
+  'Chocolate', 'Chocolate Ice Cream', 'Burgers', 'Donuts', 'Tiramisu',
+  'Little Tijuana', 'Tii Cup', 'Mini Golf', "Butcher's Tale", 'Nightingale',
+  'CC Club', 'Vegas Lounge', 'Parlor', 'Flora Room', 'Hewing Hotel', 'Wild Minds',
+  'Meteor Bar', 'Tattersall', 'Star Gazer', "Nico's Tacos", 'Malcolm Yards',
+  'Snack Bar', 'Minari', "Diane's Place", 'Paraguay', 'China', 'Pink', 'Blue',
+  'Candy', 'Coco', 'Javier', 'Salsa Dancing'
+];
 let players = [];
+const playerNames = ['nate', 'courtney'];
 let currentWord = '';
 let currentPlayerIndex = 0;
 let timer = null;
@@ -21,12 +31,14 @@ function startGame() {
     type: 'newWord',
     word: currentWord,
     yourTurn: true,
-    time: TURN_TIME
+    time: TURN_TIME,
+    name: playerNames[currentPlayerIndex]
   });
   players[(currentPlayerIndex + 1) % 2].emit('message', {
     type: 'yourTurn',
     yourTurn: false,
-    time: TURN_TIME
+    time: TURN_TIME,
+    name: playerNames[(currentPlayerIndex + 1) % 2]
   });
 
   // Start timer
@@ -45,7 +57,7 @@ io.on('connection', (socket) => {
   
   if (players.length < 2) {
     players.push(socket);
-    socket.emit('message', { type: 'info', text: 'Waiting for another player...' });
+    socket.emit('message', { type: 'info', text: 'Waiting for another player...', name: playerNames[players.length - 1] });
     
     if (players.length === 2) {
       startGame();
