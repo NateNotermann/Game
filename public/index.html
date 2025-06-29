@@ -119,6 +119,10 @@
         box-shadow: 0 2px 8px #f9d42333;
         box-sizing: border-box;
       }
+      #category-select {
+        text-align: center;
+        text-align-last: center;
+      }
       @media (min-width: 601px) {
         #game-container {
           max-width: 420px;
@@ -250,6 +254,15 @@
     <h1>MingoMatch</h1>
     <div id="game-container">
       <div id="status">Connecting...</div>
+      <label for="category-select" style="margin-bottom:12px;font-weight:bold;">Category:</label>
+      <select id="category-select" style="width:96vw;max-width:350px;margin-bottom:16px;font-size:1.1em;border-radius:8px;padding:10px;">
+        <option value="all">All</option>
+        <option value="places">Places</option>
+        <option value="food">Food & Drink</option>
+        <option value="people">People</option>
+        <option value="activities">Activities</option>
+        <option value="colors">Colors</option>
+      </select>
       <button id="start-stop-btn" style="width:100%;max-width:340px;min-width:0;box-sizing:border-box;margin-bottom:12px;padding:14px 0;font-size:1.1em;font-weight:bold;border-radius:8px;border:none;cursor:pointer;transition:background 0.2s,transform 0.1s;background:linear-gradient(90deg,#4ae250,#50e3c2);color:#fff;box-shadow:0 2px 8px rgba(80,227,194,0.08);">Start Game</button>
       <button id="turn-btn">Pass Turn</button>
       <button id="pass-word-btn" style="display:none;background:linear-gradient(90deg,#e24a4a,#e3c250);color:#fff;border:none;border-radius:8px;padding:16px 32px;font-size:1.1em;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(227,194,80,0.08);transition:background 0.2s,transform 0.1s;margin-bottom:16px;">Pass on Word</button>

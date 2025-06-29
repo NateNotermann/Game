@@ -23,6 +23,7 @@ let currentPlayerIndex = 0;
 let timer = null;
 const TURN_TIME = 30; // seconds
 let gameActive = false;
+let currentCategory = 'all';
 
 app.use(express.static('public'));
 
@@ -40,11 +41,18 @@ io.on('connection', (socket) => {
     socket.emit('message', { type: 'info', text: 'Game is full. Please wait.' });
   }
 
+  socket.emit('categoryChanged', currentCategory);
+
+  socket.on('setCategory', (category) => {
+    currentCategory = category;
+    io.emit('categoryChanged', currentCategory);
+  });
+
   socket.on('startGame', () => {
     if (!gameActive && players.length === 2) {
       gameActive = true;
       startGame();
-      io.emit('gameStarted');
+      io.emit('gameStarted'); // This triggers the start sound globally
     }
   });
 

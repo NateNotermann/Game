@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const nameDiv = document.createElement('div');
   const passWordBtn = document.getElementById('pass-word-btn');
   const startStopBtn = document.getElementById('start-stop-btn');
+  const categorySelect = document.getElementById('category-select');
   let gameActive = false;
   let countdownInterval = null;
   let timeLeft = 0;
@@ -42,12 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   turnBtn.addEventListener('click', () => {
+    // stopAllSounds(); // Removed: Passing turn should not stop the sound
     socket.emit('passTurn');
     turnBtn.disabled = true;
     statusDiv.textContent = 'Waiting for other player...';
   });
 
   passWordBtn.addEventListener('click', () => {
+    // stopAllSounds(); // Removed: Passing word should not stop the sound
     socket.emit('passWord');
     // Optionally, give feedback
     passWordBtn.disabled = true;
@@ -71,6 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
       gameActive = false;
     }
   });
+
+  if (categorySelect) {
+    categorySelect.addEventListener('change', () => {
+      socket.emit('setCategory', categorySelect.value);
+    });
+    socket.on('categoryChanged', (category) => {
+      if (categorySelect.value !== category) {
+        categorySelect.value = category;
+      }
+    });
+  }
 
   function playStartSound() {
     if (isMuted) return;
@@ -130,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on('gameStarted', () => {
     gameActive = true;
-    if (!isMuted) playStartSound();
+    playStartSound();
     startStopBtn.textContent = 'Stop Game';
     startStopBtn.style.background = 'linear-gradient(90deg,#e24a4a,#e3c250)';
   });
@@ -150,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nameDiv.textContent = `Hi ${data.name}!`;
     }
     if (data.type === 'newWord') {
-      if (gameActive && !isMuted) playStartSound();
+      // Do NOT play sound here
       statusDiv.textContent = `Your word: ${data.word}`;
       turnBtn.disabled = false;
       turnBtn.style.display = 'inline-block';
