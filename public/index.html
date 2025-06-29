@@ -30,11 +30,12 @@
         align-items: center;
       }
       #status {
-        font-size: 1.2em;
-        margin-bottom: 24px;
+        font-size: 1.4em;
+        margin-bottom: 28px;
         color: #333;
         min-height: 2em;
         text-align: center;
+        font-weight: bold;
       }
       #turn-btn {
         background: linear-gradient(90deg, #4a90e2, #50e3c2);
@@ -123,6 +124,21 @@
         text-align: center;
         text-align-last: center;
       }
+      #current-word {
+        font-size: 2.2em;
+        font-weight: bold;
+        color: #e24a4a;
+        background: #fff6b7;
+        border-radius: 16px;
+        padding: 18px 24px;
+        margin: 24px 0 24px 0;
+        text-align: center;
+        box-shadow: 0 2px 12px #f9d42333;
+        letter-spacing: 2px;
+        word-break: break-word;
+        min-height: 2.5em;
+        display: none;
+      }
       @media (min-width: 601px) {
         #game-container {
           max-width: 420px;
@@ -196,12 +212,12 @@
         transform: scale(0.97);
         box-shadow: 0 1px 4px #38f9d744;
       }
-      #status, #player-name {
-        font-size: 1.2em;
+      #status2, #player-name {
+        font-size: 1em;
         margin-bottom: 4vw;
         color: #000000;
         text-align: center;
-        font-weight: bold;
+        /* font-weight: bold; */
         letter-spacing: 1px;
       }
       #messages {
@@ -215,6 +231,21 @@
         font-size: 1.1em;
         box-shadow: 0 2px 8px #f9d42333;
         box-sizing: border-box;
+      }
+      #current-word {
+        font-size: 2.2em;
+        font-weight: bold;
+        color: #e24a4a;
+        background: #fff6b7;
+        border-radius: 16px;
+        padding: 18px 24px;
+        margin: 24px 0 24px 0;
+        text-align: center;
+        box-shadow: 0 2px 12px #f9d42333;
+        letter-spacing: 2px;
+        word-break: break-word;
+        min-height: 2.5em;
+        display: none;
       }
       @media (min-width: 601px) {
         #game-container {
@@ -254,6 +285,7 @@
     <h1>MingoMatch</h1>
     <div id="game-container">
       <div id="status">Connecting...</div>
+      <div id="current-word"></div>
       <label for="category-select" style="margin-bottom:12px;font-weight:bold;">Category:</label>
       <select id="category-select" style="width:96vw;max-width:350px;margin-bottom:16px;font-size:1.1em;border-radius:8px;padding:10px;">
         <option value="all">All Categories</option>
@@ -285,6 +317,22 @@
         muteBtn.textContent = isMuted ? '🔇' : '🔊';
         // Dispatch a custom event so client.js can listen and mute/unmute
         window.dispatchEvent(new CustomEvent('mute-toggled', { detail: { isMuted } }));
+      });
+
+      // Add logic to show the current word in a prominent way
+      const statusDiv = document.getElementById('status');
+      const currentWordDiv = document.getElementById('current-word');
+
+      // Listen for word updates from client.js
+      window.addEventListener('show-current-word', (e) => {
+        currentWordDiv.textContent = e.detail.word;
+        currentWordDiv.style.display = 'block';
+        statusDiv.style.display = 'none';
+      });
+      window.addEventListener('hide-current-word', () => {
+        currentWordDiv.textContent = '';
+        currentWordDiv.style.display = 'none';
+        statusDiv.style.display = 'block';
       });
     </script>
     <script src="/socket.io/socket.io.js"></script>

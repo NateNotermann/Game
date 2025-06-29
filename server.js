@@ -226,7 +226,7 @@ io.on('connection', (socket) => {
       case 'transportation':
         words = transportation;
         break;
-    case 'nsfw':
+      case 'nsfw':
         words = nsfw;
         break;
       case 'all':
