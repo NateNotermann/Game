@@ -6,6 +6,17 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+// Nate and Courtney
+const nateandcourtney = [
+ "Miami", "New York", "Flingy & Dingy", "Flamingo", "Monkey", "Public Domain",
+"Nicolet Island Inn", "Cabana Club", "Mezcal", "Tequila", "Whiskey",
+"Chocolate", "Chocolate Ice Cream", "Burgers", "Donuts", "Tiramisu", 
+"Little Tijuana", "Tii Cup", "Mini Golf", "Butcher's Tale", "Nightingale", "Vegas Lounge", "Parlor", "Flora Room", "Hewing Hotel", "Wild Minds",
+"Meteor Bar", "Tattersall", "Star Gazer", "Nico's Tacos", "Malcolm Yards",
+"Snack Bar", "Minari", "Diane's Place", "Paraguay", "China", "Pink", "Blue",
+"Candy", "Coco", "Javier", "clogging the toilet", "spicy poos", "Salsa Dancing", "Rae", "Target", "Software Engineer", "Sr Project Manger", "Trafficking", "Nate's eye color", "Courtney's eye color", "Jacob"
+];
+
 // TV / Entertainment
 const tvEntertainment = [
   'Friends', 'Breaking Bad', 'The Office', 'Game of Thrones', 'Netflix',
@@ -148,6 +159,7 @@ const nsfw = [
 
 // All Categories Combined
 const all = [
+  ...nateandcourtney,
   ...tvEntertainment,
   ...history,
   ...geography,
@@ -193,6 +205,9 @@ io.on('connection', (socket) => {
     currentCategory = category;
     // Set the words array based on the selected category
     switch (category) {
+      case 'nateandcourtney':
+        words = nateandcourtney;
+        break;
       case 'tvEntertainment':
         words = tvEntertainment;
         break;
